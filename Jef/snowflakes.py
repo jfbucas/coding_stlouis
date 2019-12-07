@@ -13,7 +13,12 @@ MAXSPEED = 5
 MOVERATE = 1
 
 NBLINES = 1
-NBSNOW = 100
+NBSNOW = 1000
+
+MAXWIND = 10
+
+black = (0,0,0,255)
+white = (255,255,255,255)
 
 def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, GRASSIMAGES
@@ -43,37 +48,66 @@ def runGame():
 
     flakes = []
     for n in range(NBSNOW):
-      color = random.randint(128, 255)
+      color = random.randint(192, 255)
       flakes.append( {
-                 'x': random.randint(0,WINWIDTH-10),
-                 'y': 5,
+                 'x': random.randint(0,WINWIDTH-1),
+                 'y': random.randint(-WINHEIGHT,0),
                  'color' : (color,color,color),
                  } )
-                
+
+    bottom_line = [ WINHEIGHT ] * WINWIDTH                 
                   
     moveLeft  = False
     moveRight = False
     moveUp    = False
     moveDown  = False
 
-    pygame.draw.rect(DISPLAYSURF, (255,255,255),(0,WINHEIGHT-(MAXSPEED*3),WINWIDTH,WINHEIGHT))
+    #pygame.draw.rect(DISPLAYSURF, white, (0,WINHEIGHT-(MAXSPEED*3),WINWIDTH,WINHEIGHT))
 
+    wind = random.randint(-MAXWIND, MAXWIND)
 
     while True: # main game loop
 
+        # Handle wind
+        wind += random.randint(-1, +1)
+        if wind < -MAXWIND:
+                wind = -MAXWIND
+        if wind > MAXWIND:
+                wind = MAXWIND
         
         for n in range(NBSNOW):
-            gfxdraw.pixel(DISPLAYSURF, flakes[n]['x'], flakes[n]['y'], [0,0,0])
-            flakes[n]['y'] += random.randint(0,MAXSPEED)+1
+            flake = flakes[n]
 
-            if DISPLAYSURF.get_at( [flakes[n]['x'],flakes[n]['y']] ) == (255,255,255):
-               gfxdraw.pixel(DISPLAYSURF, flakes[n]['x'], flakes[n]['y'], flakes[n]['color'])
-               flakes[n]['y'] = 5
+	    # Get flake new position
+	    new_x = flake['x'] + wind
+	    new_y = flake['y'] + random.randint(0,MAXSPEED)+1
+
+	    # Make sure the flake stays on screen
+            if new_x < 0:
+                new_x += WINWIDTH
+            if new_x >= WINWIDTH:
+                new_x -= WINWIDTH
+
+	    # If the color is not black, we move the flake
+	    if new_y < bottom_line[ new_x ]:
+
+               # Clear flake
+               gfxdraw.pixel(DISPLAYSURF, flake['x'], flake['y'], black)
+
+               flake['x'] = new_x
+               flake['y'] = new_y
                 
-            gfxdraw.pixel(DISPLAYSURF, flakes[n]['x'], flakes[n]['y'], flakes[n]['color'])
+	       # Draw flake
+               gfxdraw.pixel(DISPLAYSURF, flake['x'], flake['y'], flake['color'])
+
+	    else:
+               bottom_line[ flake['x'] ] = flake['y']
+
+	       # Otherwise, we move the flake back to the top
+               flake['x'] = random.randint(0,WINWIDTH-1)
+               flake['y'] = random.randint(-WINHEIGHT//2,0)
 
 		
-        gfxdraw.pixel(DISPLAYSURF, player['x'], player['y'], player['color'])
 
         for event in pygame.event.get():
             if event.type == QUIT:
