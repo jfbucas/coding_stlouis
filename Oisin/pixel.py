@@ -11,7 +11,7 @@ HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 MOVERATE = 5
 MOVERATEFORENEMY=4
-NB_ENEMY = 10
+NB_ENEMY = 15
 INVULNTIME = 5
 
 
@@ -59,13 +59,10 @@ def runGame():
     while True: # main game loop
         if tickcounter > MYTICKCOUNTERMAX:
           pygame.draw.rect(DISPLAYSURF, (0,0,0),(0,0,WINWIDTH,WINHEIGHT))
-          rx = random.randint(1,WINWIDTH-1)
-          ry = random.randint(10,WINHEIGHT-10)
-
-          pygame.draw.rect(DISPLAYSURF, (122,100,5),(rx,ry,rx+10,ry+10))
-          tickcounter = -100
+          tickcounter = -1000
 		
-        
+        for e in enemy:
+            gfxdraw.pixel(DISPLAYSURF, e['x'], e['y'], e['color'])
             
         if player['invulnerable'] > 0:
            player['invulnerable'] -= 1
@@ -135,24 +132,20 @@ def runGame():
          elif e['y'] < player['y']:
 			e['y'] += 1
 
-         for e in enemy:
-#            gfxdraw.pixel(DISPLAYSURF, e['x'], e['y'], e['color'])
-#         if ( e['x'], e['y']) == (player['color']):
-#            e['x'] = random.
-#            e['y'] = random.randint(0,WINHEIGHT)
-            if DISPLAYSURF.get_at( (e['x'], e['y']) ) == player['color']:
-             e['x'] = random.randint(0,WINWIDTH)
-             e['y'] = random.randint(0,WINHEIGHT)
-            if DISPLAYSURF.get_at( ( player['x'], player['y']) )== e['color']:terminate
-           #  player['x'] = random.randint(0,WINWIDTH)
-            # player['y'] = random.randint(0,WINHEIGHT)
+#         if DISPLAYSURF.get_at( (e['x'], e['y']) ) == player['color']:
+         if ( e['x'], e['y']) == (player['x'], player['y']):
+            e['x'] = random.randint(0,WINWIDTH)
+            e['y'] = random.randint(0,WINHEIGHT)
+            MOVERATE -= 1
+            player['invulnerable'] = INVULNTIME * FPS
+         if DISPLAYSURF.get_at( (e['x'], e['y']) ) == enemy[0]['color']:
+            e['x'] = random.randint(0,WINWIDTH)
+            e['y'] = random.randint(0,WINHEIGHT)
          #enemy['x'] += random.randint(-1,1)
          #enemy['y'] += random.randint(-1,1)
-         if MOVERATE == 0:terminate
+         if MOVERATE == 0:terminate()
         pygame.display.update()
         FPSCLOCK.tick(FPS)
-        for e in enemy:
-            gfxdraw.pixel(DISPLAYSURF, e['x'], e['y'], e['color'])
         tickcounter += 1
 
 
