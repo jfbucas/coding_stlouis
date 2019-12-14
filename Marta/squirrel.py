@@ -12,21 +12,21 @@ WINHEIGHT = 480 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
-GRASSCOLOR = (50, 30, 200)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
+GRASSCOLOR = (0, 89, 2)
+WHITE = (254, 55, 9)
+RED = (0, 89, 2)
 
 CAMERASLACK = 90     # how far from the center the squirrel moves before moving the camera
-MOVERATE = 20     # how fast the player moves
-BOUNCERATE = 30   # how fast the player bounces (large is slower)
-BOUNCEHEIGHT = 100   # how high the player bounces
+MOVERATE = 30
+BOUNCERATE = 100   # how fast the player bounces (large is slower)
+BOUNCEHEIGHT = 255   # how high the player bounces
 STARTSIZE = 30     # how big the player starts off
-WINSIZE = 300        # how big the player needs to be to win
+WINSIZE = 500    # how big the player needs to be to win
 INVULNTIME = 0       # how long the player is invulnerable after being hit in seconds
 GAMEOVERTIME = 4     # how long the "game over" text stays on the screen in seconds
 MAXHEALTH = 100 # how much health the player starts with
 
-NUMGRASS = 80        # number of grass objects in the active area
+NUMGRASS = 300       # number of grass objects in the active area
 NUMSQUIRRELS = 30    # number of squirrels in the active area
 NUMSQUIRRELSBOSS = 1 # number of squirrels in the active area
 SQUIRRELBOSSMINSPEED = 20 # slowest squirrel speed
@@ -71,7 +71,8 @@ def main():
     FPSCLOCK = pygame.time.Clock()
     pygame.display.set_icon(pygame.image.load('gameicon.png'))
     DISPLAYSURF = pygame.display.set_mode((WINWIDTH, WINHEIGHT))
-    pygame.display.set_caption('Squirrel Eat Squirrel')
+    pygame.display.set_caption('squrirle put in  squrirle in it mouth')
+     
     BASICFONT = pygame.font.Font('freesansbold.ttf', 32)
 
     # load the image files
@@ -94,11 +95,11 @@ def runGame():
     winMode = False           # if the player has won
 
     # create the surfaces to hold game text
-    gameOverSurf = BASICFONT.render('Game Over', True, WHITE)
+    gameOverSurf = BASICFONT.render('U LOST DA BOSS BATTLE )-:',True,WHITE)
     gameOverRect = gameOverSurf.get_rect()
     gameOverRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
-    winSurf = BASICFONT.render('You have achieved OMEGA SQUIRREL!', True, WHITE)
+    winSurf = BASICFONT.render('ur squrirle BIG!!!!!!!!!!!!!!!',True, WHITE)
     winRect = winSurf.get_rect()
     winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
