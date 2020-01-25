@@ -4,21 +4,23 @@ from pygame.locals import *
 from pygame import gfxdraw
 
 
-FPS = 60 # frames per second to update the screen
+FPS = 100 # frames per second to update the screen
 WINWIDTH = 1090 # width of the program's window, in pixels
 WINHEIGHT = 600 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
-MAXSPEED = 5
+MAXSPEED = 1
 MOVERATE = 1
 flakespeed = 1
 NBLINES = 1
-NBSNOW = 100
+NBSNOW = 500
+PLAYERSIZE=3
 
-MAXWIND = 10
+MAXWIND = 3
 
 black = (0,0,0,255)
 white = (255,255,255,255)
+red = (255,0,0,255)
 
 def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, GRASSIMAGES
@@ -43,7 +45,8 @@ def runGame():
    
     player = {
                  'x': HALF_WINWIDTH,
-                 'y': HALF_WINHEIGHT,
+                 'y': WINHEIGHT-PLAYERSIZE,
+                 'size': PLAYERSIZE,
                  'color' : (255,0,0),
                  }
 
@@ -55,8 +58,6 @@ def runGame():
                  'y': random.randint(-WINHEIGHT,0),
                  'color' : (color,color,color),
                  } )
-
-    bottom_line = [ WINHEIGHT ] * WINWIDTH                 
                   
     moveLeft  = False
     moveRight = False
@@ -68,57 +69,45 @@ def runGame():
     wind = random.randint(-MAXWIND, MAXWIND)
 
     while True: # main game loop
-        if moveUp : flakespeed = flakespeed-1 
-	if moveDown : flakespeed = flakespeed+1
-        
-        # Handle wind
-        if  moveLeft : wind = wind-1
-	if moveRight : wind = wind+1 
-        if wind < -MAXWIND:
-                wind = -MAXWIND
-        if wind > MAXWIND:
-                wind = MAXWIND
-        
-	if moveRight : wind = wind+1 
-        if wind < -MAXWIND:
-                wind = -MAXWIND
-        if wind > MAXWIND:
-                wind = MAXWIND
-        
+        gfxdraw.pixel(DISPLAYSURF, player['x'], player['y'], black)
+        if moveUp : player['y'] = player['y']-2 
+        if moveDown : player['y'] = player['y']+2
+        if moveLeft : player['x'] = player['x']-2
+        if moveRight : player['x'] = player['x']+2
+          
         for n in range(NBSNOW):
             flake = flakes[n]
+            
+	        # Get flake new position
+            new_x = flake['x'] + wind
+            new_y = flake['y'] + random.randint(0,MAXSPEED)+(flakespeed)
 
-	    # Get flake new position
-	    new_x = flake['x'] + wind
-	    new_y = flake['y'] + random.randint(0,MAXSPEED)+(flakespeed)
-
-	    # Make sure the flake stays on screen
+	        # Make sure the flake stays on screen
             if new_x < 0:
                 new_x += WINWIDTH
             if new_x >= WINWIDTH:
                 new_x -= WINWIDTH
 
-	    # If the color is not black, we move the flake
-	    if new_y < bottom_line[ new_x ]:
 
-               # Clear flake
-               gfxdraw.pixel(DISPLAYSURF, flake['x'], flake['y'], black)
+            # Clear flake
+            gfxdraw.pixel(DISPLAYSURF, flake['x'], flake['y'], black)
 
-               flake['x'] = new_x
-               flake['y'] = new_y
+            flake['x'] = new_x
+            flake['y'] = new_y
                 
-	       # Draw flake
-               gfxdraw.pixel(DISPLAYSURF, flake['x'], flake['y'], flake['color'])
+	        # Draw flake
+            gfxdraw.pixel(DISPLAYSURF, flake['x'], flake['y'], flake['color'] )
+            if(player['x']==flake['x'] and player['y']==flake['y']):terminate
 
-	    else:
-               bottom_line[ flake['x'] ] = flake['y']
+	        # If the color is not black, we move the flake
+            if new_y > WINHEIGHT:
 
 	       # Otherwise, we move the flake back to the top
                flake['x'] = random.randint(0,WINWIDTH-1)
                flake['y'] = random.randint(-WINHEIGHT//2,0)
 
-		
-
+        gfxdraw.pixel(DISPLAYSURF, player['x'], player['y'], red)
+        
         for event in pygame.event.get():
             if event.type == QUIT:
                 terminate()
@@ -155,14 +144,7 @@ def runGame():
 
         #if not gameOverMode:
             # actually move the player
-        if moveLeft:
-                player['x'] -= MOVERATE
-        if moveRight:
-                player['x'] += MOVERATE
-        if moveUp:
-                player['y'] -= MOVERATE
-        if moveDown:
-                player['y'] += MOVERATE
+       
             
                      
         pygame.display.update()
