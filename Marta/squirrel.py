@@ -12,23 +12,23 @@ WINHEIGHT = 480 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
-GRASSCOLOR = (0, 89, 2)
-WHITE = (254, 55, 9)
-RED = (0, 89, 2)
+GRASSCOLOR = (0, 89, 10)
+WHITE = (24, 5, 119)
+RED = (0, 9, 10)
 
 CAMERASLACK = 90     # how far from the center the squirrel moves before moving the camera
 MOVERATE = 30
 BOUNCERATE = 100   # how fast the player bounces (large is slower)
-BOUNCEHEIGHT = 255   # how high the player bounces
-STARTSIZE = 30     # how big the player starts off
-WINSIZE = 500    # how big the player needs to be to win
+BOUNCEHEIGHT = 155   # how high the player bounces
+STARTSIZE = 40     # how big the player starts off
+WINSIZE = 300    # how big the player needs to be to win
 INVULNTIME = 0       # how long the player is invulnerable after being hit in seconds
 GAMEOVERTIME = 4     # how long the "game over" text stays on the screen in seconds
-MAXHEALTH = 100 # how much health the player starts with
+MAXHEALTH = 1000 # how much health the player starts with
 
 NUMGRASS = 300       # number of grass objects in the active area
 NUMSQUIRRELS = 30    # number of squirrels in the active area
-NUMSQUIRRELSBOSS = 1 # number of squirrels in the active area
+NUMSQUIRRELSBOSS = 3# number of squirrels in the active area
 SQUIRRELBOSSMINSPEED = 20 # slowest squirrel speed
 SQUIRRELBOSSMAXSPEED = 30 # fastest squirrel speed
 SQUIRRELMINSPEED = 3 # slowest squirrel speed
@@ -89,9 +89,9 @@ def main():
 def runGame():
     # set up variables for the start of a new game
     invulnerableMode = False  # if the player is invulnerable
-    invulnerableStartTime = 1 # time the player became invulnerable
+    invulnerableStartTime = 0 # time the player became invulnerable
     gameOverMode = False      # if the player has lost
-    gameOverStartTime = 0     # time the player lost
+    gameOverStartTime = 10     # time the player lost
     winMode = False           # if the player has won
 
     # create the surfaces to hold game text
@@ -99,11 +99,11 @@ def runGame():
     gameOverRect = gameOverSurf.get_rect()
     gameOverRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
-    winSurf = BASICFONT.render('ur squrirle BIG!!!!!!!!!!!!!!!',True, WHITE)
+    winSurf = BASICFONT.render('U DEFEATED THE BOSS O SQUIRREL NOW U ARE DA BOSS !!!!!!!!!!!!!!!',True, WHITE)
     winRect = winSurf.get_rect()
     winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
-    winSurf2 = BASICFONT.render('(Press "r" to restart.)', True, WHITE)
+    winSurf2 = BASICFONT.render('(Press "r" to SWOW HOW MACH O A BOSS U ARE.)', True, WHITE)
     winRect2 = winSurf2.get_rect()
     winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT + 30)
 
@@ -373,7 +373,7 @@ def getRandomOffCameraPos(camerax, cameray, objWidth, objHeight):
 def makeNewSquirrel(camerax, cameray, boss):
     sq = {}
     if boss:
-        generalSize = random.randint(300, 350)
+        generalSize = random.randint(500, 501)
     else:
         generalSize = random.randint(5, 25)
     multiplier = random.randint(1, 2)
