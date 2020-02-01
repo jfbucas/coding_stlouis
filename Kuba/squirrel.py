@@ -12,24 +12,24 @@ WINHEIGHT = 480 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
-GRASSCOLOR = (2, 2, 0)
+GRASSCOLOR = (0, 50, 0)
 WHITE = (25, 2, 255)
 RED = (25, 1, 0)
 
 CAMERASLACK = 2     # how far from the center the squirrel moves before moving the camera
-MOVERATE = 60           # how fast the player moves
+MOVERATE = 5       # how fast the player moves
 BOUNCERATE = 6       # how fast the player bounces (large is slower)
-BOUNCEHEIGHT = 30    # how high the player bounces
-STARTSIZE = 25       # how big the player starts off
-WINSIZE = 300        # how big the player needs to be to win
-INVULNTIME = 2       # how long the player is invulnerable after being hit in seconds
+BOUNCEHEIGHT = 5   # how high the player bounces
+STARTSIZE = 50      # how big the player starts off
+WINSIZE = 500       # how big the player needs to be to win
+INVULNTIME = 4     # how long the player is invulnerable after being hit in seconds
 GAMEOVERTIME = 4     # how long the "game over" text stays on the screen in seconds
-MAXHEALTH = 300        # how much health the player starts with
+MAXHEALTH = 2    # how much health the player starts with
 
 NUMGRASS = 800        # number of grass objects in the active area
-NUMSQUIRRELS = 100    # number of squirrels in the active area
+NUMSQUIRRELS = 30   # number of squirrels in the active area
 SQUIRRELMINSPEED = 1 # slowest squirrel speed
-SQUIRRELMAXSPEED = 2# fastest squirrel speed
+SQUIRRELMAXSPEED = 1# fastest squirrel speed
 DIRCHANGEFREQ = 2    # % chance of direction change per frame
 LEFT = 'left'
 RIGHT = 'right'
@@ -315,9 +315,9 @@ def runGame():
 
 def drawHealthMeter(currentHealth):
     for i in range(currentHealth): # draw red health bars
-        pygame.draw.rect(DISPLAYSURF, RED,   (15, 5 + (10 * MAXHEALTH) - i * 10, 20, 10))
+        pygame.draw.rect(DISPLAYSURF, RED,   (1, 5 + (10 * MAXHEALTH) - i * 3, 5, 3))
     for i in range(MAXHEALTH): # draw the white outlines
-        pygame.draw.rect(DISPLAYSURF, WHITE, (15, 5 + (10 * MAXHEALTH) - i * 10, 20, 10), 1)
+        pygame.draw.rect(DISPLAYSURF, WHITE, (1, 5 + (10 * MAXHEALTH) - i * 3, 5, 3), 1)
 
 
 def terminate():
@@ -355,7 +355,7 @@ def getRandomOffCameraPos(camerax, cameray, objWidth, objHeight):
 
 def makeNewSquirrel(camerax, cameray):
     sq = {}
-    generalSize = random.randint(5, 25)
+    generalSize = random.randint(5, 80)
     multiplier = random.randint(1, 3)
     sq['width']  = (generalSize + random.randint(0, 10)) * multiplier
     sq['height'] = (generalSize + random.randint(0, 10)) * multiplier
