@@ -9,15 +9,15 @@ WINWIDTH = 1090 # width of the program's window, in pixels
 WINHEIGHT = 600 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
-MAXSPEED = 5
-MOVERATE = 1
+MAXSPEED = 1
+MOVERATE = 2
 flakespeed = 1
 NBLINES = 1
-NBSNOW = 200
+NBSNOW = 50
 PLAYERSIZE=3
 
-MAXWIND = 10
-
+MAXWIND = 0
+SNOW_IMG = pygame.image.load("snowflake.png")
 black = (0,0,0,255)
 white = (255,255,255,255)
 red = (255,0,0,255)
@@ -69,11 +69,11 @@ def runGame():
     wind = random.randint(-MAXWIND, MAXWIND)
 
     while True: # main game loop
-        pygame.draw.rect( DISPLAYSURF, black, (player['x'], player['y'], player['size'], player['size'] ))
-        if moveUp : player['y'] = player['y']-2 
+        pygame.draw.rect( DISPLAYSURF, black, (0,0,   WINWIDTH,WINHEIGHT ))
+        if moveUp : player['y'] = player['y']-2
         if moveDown : player['y'] = player['y']+2
         if moveLeft : player['x'] = player['x']-2
-        if moveRight : player['x'] = player['x']+2 
+        if moveRight : player['x'] = player['x']+2
           
         for n in range(NBSNOW):
             flake = flakes[n]
@@ -90,18 +90,21 @@ def runGame():
 
 
             # Clear flake
-            gfxdraw.pixel(DISPLAYSURF, flake['x'], flake['y'], black)
-
+            
+            
             flake['x'] = new_x
             flake['y'] = new_y
                 
 	        # Draw flake
-            gfxdraw.pixel(DISPLAYSURF, flake['x'], flake['y'], flake['color'] )
-            if(flake['x']>=player['x'] and
-            flake['x']<= player['x']+player['size'] and
-            flake['y']>=player['y'] and
-            flake['y']<=player['y']+player['size']):fhbfdbgfbg        
-
+            DISPLAYSURF.blit(SNOW_IMG, (flake['x'],flake['y'], flake['x']+50,flake['y']+50))
+            player['rect'] = pygame.Rect( (player['x'], player['y'], 2, 2) )
+            flake['rect'] = pygame.Rect( (flake['x'], flake['y'], 40, 40) )
+            
+            if player['rect'].colliderect(flake['rect']):
+                terminate()
+                print('Collision')
+           
+            
 	        # If the color is not black, we move the flake
             if new_y > WINHEIGHT:
 
