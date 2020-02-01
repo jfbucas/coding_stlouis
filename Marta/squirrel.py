@@ -24,7 +24,7 @@ STARTSIZE = 40     # how big the player starts off
 WINSIZE = 300    # how big the player needs to be to win
 INVULNTIME = 0       # how long the player is invulnerable after being hit in seconds
 GAMEOVERTIME = 4     # how long the "game over" text stays on the screen in seconds
-MAXHEALTH = 1000 # how much health the player starts with
+MAXHEALTH = 100 # how much health the player starts with
 
 NUMGRASS = 300       # number of grass objects in the active area
 NUMSQUIRRELS = 30    # number of squirrels in the active area
@@ -103,7 +103,7 @@ def runGame():
     winRect = winSurf.get_rect()
     winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
-    winSurf2 = BASICFONT.render('(Press "r" to SWOW HOW MACH O A BOSS U ARE.)', True, WHITE)
+    winSurf2 = BASICFONT.render('(Press "r"  U LOOK LIK U R DA BOSS.)', True, WHITE)
     winRect2 = winSurf2.get_rect()
     winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT + 30)
 
