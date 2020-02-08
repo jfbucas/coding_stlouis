@@ -7,8 +7,8 @@ import random, sys, time, math, pygame
 from pygame.locals import *
 
 FPS = 30 # frames per second to update the screen
-WINWIDTH = 640 # width of the program's window, in pixels
-WINHEIGHT = 480 # height in pixels
+WINWIDTH = 1320# width of the program's window, in pixels
+WINHEIGHT = 780 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
@@ -21,16 +21,17 @@ MOVERATE = 5       # how fast the player moves
 BOUNCERATE = 6       # how fast the player bounces (large is slower)
 BOUNCEHEIGHT = 5   # how high the player bounces
 STARTSIZE = 50      # how big the player starts off
-WINSIZE = 500       # how big the player needs to be to win
+WINSIZE = 400    # how big the player needs to be to win
 INVULNTIME = 4     # how long the player is invulnerable after being hit in seconds
 GAMEOVERTIME = 4     # how long the "game over" text stays on the screen in seconds
-MAXHEALTH = 2    # how much health the player starts with
+MAXHEALTH = 3    # how much health the player starts with
 
 NUMGRASS = 800        # number of grass objects in the active area
 NUMSQUIRRELS = 30   # number of squirrels in the active area
 SQUIRRELMINSPEED = 1 # slowest squirrel speed
 SQUIRRELMAXSPEED = 1# fastest squirrel speed
 DIRCHANGEFREQ = 2    # % chance of direction change per frame
+BOSSAPPEARSIZE = 50
 LEFT = 'left'
 RIGHT = 'right'
 
@@ -61,13 +62,13 @@ Grass data structure keys:
 """
 
 def main():
-    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, GRASSIMAGES
+    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG,L_BOSS_IMG, R_BOSS_IMG, GRASSIMAGES
 
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
     pygame.display.set_icon(pygame.image.load('gameicon.png'))
     DISPLAYSURF = pygame.display.set_mode((WINWIDTH, WINHEIGHT))
-    pygame.display.set_caption('Squirrel Eat Squirrel')
+    pygame.display.set_caption('Squirrel Eat Squirrel HALLOWEEN EDITION')
     BASICFONT = pygame.font.Font('freesansbold.ttf', 32)
 
     # load the image files
@@ -76,7 +77,11 @@ def main():
     GRASSIMAGES = []
     for i in range(1, 5):
         GRASSIMAGES.append(pygame.image.load('grass%s.png' % i))
-
+        
+    # load the image files
+    L_BOSS_IMG = pygame.image.load('boss.png')
+    R_BOSS_IMG = pygame.transform.flip(L_BOSS_IMG, True, False)
+    
     while True:
         runGame()
 
@@ -116,6 +121,9 @@ def runGame():
                  'y': HALF_WINHEIGHT,
                  'bounce':0,
                  'health': MAXHEALTH}
+                 
+                 
+    BossObj = makeNewBoss(camerax, cameray)
 
     moveLeft  = False
     moveRight = False
@@ -150,6 +158,24 @@ def runGame():
                     sObj['surface'] = pygame.transform.scale(R_SQUIR_IMG, (sObj['width'], sObj['height']))
                 else: # faces left
                     sObj['surface'] = pygame.transform.scale(L_SQUIR_IMG, (sObj['width'], sObj['height']))
+                    
+        # move all the Boss
+        # move the squirrel, and adjust for their bounce
+        print( BossObj['x'], BossObj['y'] )
+        BossObj['x'] += BossObj['movex']
+        BossObj['y'] += BossObj['movey']
+        BossObj['bounce'] += 1
+        if BossObj['bounce'] > BossObj['bouncerate']:
+                BossObj['bounce'] = 0 # reset bounce amount
+
+        # random chance they change direction
+        if random.randint(0, 99) < DIRCHANGEFREQ:
+                BossObj['movex'] = getRandomVelocity()
+                BossObj['movey'] = getRandomVelocity()
+                if BossObj['movex'] > 0: # faces right
+                    BossObj['surface'] = pygame.transform.scale(R_SQUIR_IMG, (BossObj['width'], BossObj['height']))
+                else: # faces left
+                    BossObj['surface'] = pygame.transform.scale(L_SQUIR_IMG, (BossObj['width'], BossObj['height']))
 
 
         # go through all the objects and see if any need to be deleted.
@@ -197,7 +223,13 @@ def runGame():
                                          sObj['width'],
                                          sObj['height']) )
             DISPLAYSURF.blit(sObj['surface'], sObj['rect'])
-
+           
+        # draw the boss
+        BossObj['rect'] = pygame.Rect( (BossObj['x'] - camerax,
+                                         BossObj['y'] - cameray - getBounceAmount(BossObj['bounce'], BossObj['bouncerate'], BossObj['bounceheight']),
+                                         BossObj['width'],
+                                         BossObj['height']) )
+        DISPLAYSURF.blit(BossObj['surface'], BossObj['rect'])
 
         # draw the player squirrel
         flashIsOn = round(time.time(), 1) * 10 % 2 == 1
@@ -206,7 +238,7 @@ def runGame():
                                               playerObj['y'] - cameray - getBounceAmount(playerObj['bounce'], BOUNCERATE, BOUNCEHEIGHT),
                                               playerObj['size'],
                                               playerObj['size']) )
-            DISPLAYSURF.blit(playerObj['surface'], playerObj['rect'])
+            DISPLAYSURF.blit(pygame.transform.rotate(playerObj['surface'], playerObj['bounce']), playerObj['rect'])
 
 
         # draw the health meter
@@ -371,7 +403,25 @@ def makeNewSquirrel(camerax, cameray):
     sq['bounceheight'] = random.randint(10, 50)
     return sq
 
-
+def makeNewBoss(camerax, cameray):
+    sq = {}
+    generalSize = 400 
+    multiplier = random.randint(1, 3)
+    sq['width']  = generalSize
+    sq['height'] = generalSize
+    sq['x'], sq['y'] = getRandomOffCameraPos(camerax, cameray, sq['width'], sq['height'])
+    sq['x'], sq['y'] = camerax, cameray
+    sq['movex'] = getRandomVelocity()
+    sq['movey'] = getRandomVelocity()
+    if sq['movex'] < 0: # squirrel is facing left
+        sq['surface'] = pygame.transform.scale(L_BOSS_IMG, (sq['width'], sq['height']))
+    else: # squirrel is facing right
+        sq['surface'] = pygame.transform.scale(R_BOSS_IMG, (sq['width'], sq['height']))
+    sq['bounce'] = 0
+    sq['bouncerate'] = random.randint(10, 18)
+    sq['bounceheight'] = random.randint(10, 50)
+    return sq
+    
 def makeNewGrass(camerax, cameray):
     gr = {}
     gr['grassImage'] = random.randint(0, len(GRASSIMAGES) - 1)
