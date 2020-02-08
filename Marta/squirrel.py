@@ -6,14 +6,15 @@
 import random, sys, time, math, pygame
 from pygame.locals import *
 
+
 FPS = 30 # frames per second to update the screen
 WINWIDTH = 640 # width of the program's window, in pixels
 WINHEIGHT = 480 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
-GRASSCOLOR = (0, 89, 10)
-WHITE = (24, 5, 119)
+GRASSCOLOR = (0, 19, 10)
+WHITE = (24, 50, 19)
 RED = (0, 9, 10)
 
 CAMERASLACK = 90     # how far from the center the squirrel moves before moving the camera
@@ -24,7 +25,7 @@ STARTSIZE = 40     # how big the player starts off
 WINSIZE = 300    # how big the player needs to be to win
 INVULNTIME = 0       # how long the player is invulnerable after being hit in seconds
 GAMEOVERTIME = 4     # how long the "game over" text stays on the screen in seconds
-MAXHEALTH = 100 # how much health the player starts with
+MAXHEALTH =  100# how much health the player starts with
 
 NUMGRASS = 300       # number of grass objects in the active area
 NUMSQUIRRELS = 30    # number of squirrels in the active area
@@ -76,7 +77,7 @@ def main():
     BASICFONT = pygame.font.Font('freesansbold.ttf', 32)
 
     # load the image files
-    L_SQUIR_IMG = pygame.image.load('squirrel.png')
+    L_SQUIR_IMG = pygame.image.load('asquirrel.png')
     R_SQUIR_IMG = pygame.transform.flip(L_SQUIR_IMG, True, False)
     GRASSIMAGES = []
     for i in range(1, 5):
