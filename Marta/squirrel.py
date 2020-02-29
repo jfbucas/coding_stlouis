@@ -80,7 +80,7 @@ def main():
     L_SQUIR_IMG = pygame.image.load('asquirrel.png')
     R_SQUIR_IMG = pygame.transform.flip(L_SQUIR_IMG, True, False)
     GRASSIMAGES = []
-    for i in range(1, 5):
+    for i in range(1, 9):
         GRASSIMAGES.append(pygame.image.load('grass%s.png' % i))
 
     while True:

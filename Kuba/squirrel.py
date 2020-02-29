@@ -230,7 +230,13 @@ def runGame():
                                          BossObj['width'],
                                          BossObj['height']) )
         DISPLAYSURF.blit(BossObj['surface'], BossObj['rect'])
-
+        
+       # check if the player has collided with anybosses
+				for i in range(len(bossObjs)-1, -1, -1):
+                bossObj = bossObjs[i]
+                if 'rect' in bossObj and playerObj['rect'].colliderect(bossObj['rect']):
+                    # a player/boss collision has occurred
+                    
         # draw the player squirrel
         flashIsOn = round(time.time(), 1) * 10 % 2 == 1
         if not gameOverMode and not (invulnerableMode and flashIsOn):
@@ -302,12 +308,12 @@ def runGame():
                 playerObj['bounce'] = 0 # reset bounce amount
 
             # check if the player has collided with any squirrels
-            for i in range(len(squirrelObjs)-1, -1, -1):
-                sqObj = squirrelObjs[i]
-                if 'rect' in sqObj and playerObj['rect'].colliderect(sqObj['rect']):
+				for i in range(len(squirrelObjs)-1, -1, -1):
+					sqObj = squirrelObjs[i]
+					if 'rect' in sqObj and playerObj['rect'].colliderect(sqObj['rect']):
                     # a player/squirrel collision has occurred
 
-                    if sqObj['width'] * sqObj['height'] <= playerObj['size']**2:
+					if sqObj['width'] * sqObj['height'] <= playerObj['size']**2:
                         # player is larger and eats the squirrel
                         playerObj['size'] += int( (sqObj['width'] * sqObj['height'])**0.2 ) + 1
                         del squirrelObjs[i]
