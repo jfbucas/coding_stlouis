@@ -200,7 +200,7 @@ def main(winstyle = 0):
     Explosion.images = [img, pygame.transform.flip(img, 1, 1)]
     Alien.images = load_images('alien1.gif', 'alien2.gif', 'alien3.gif')
     Bomb.images = [load_image('bomb.gif')]
-    Shot.images = [load_image('shot.gif')]
+    Shot.images = [load_image('shot.png')]
 
     #decorate the game window
     icon = pygame.transform.scale(Alien.images[0], (32, 32))
