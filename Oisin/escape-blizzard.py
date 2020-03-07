@@ -95,8 +95,8 @@ def runGame():
             flake['y'] = new_y
                 
 	        # Draw flake
-            DISPLAYSURF.blit(SNOW_IMG, (flake['x'],flake['y'], flake['x']+50,flake['y']+50))
-            flake['rect'] = pygame.Rect( (flake['x'], flake['y'], 40, 40) )
+            DISPLAYSURF.blit(SNOW_IMG, (flake['x'],flake['y'], flake['x']+flake['size'],flake['y']+flake['size']))
+            flake['rect'] = pygame.Rect( (flake['x'], flake['y'], flake['size'], flake['size']) )
             
             if player['rect'].colliderect(flake['rect']):
                 terminate()
@@ -121,13 +121,13 @@ def runGame():
 				
                 for flake in flakes:
                
-                  flake['rect'] = pygame.Rect( (flake['x'], flake['y'], 40, 40) )
+                  flake['rect'] = pygame.Rect( (flake['x'], flake['y'], flake['size'], flake['size']) )
             
                   if bullet['rect'].colliderect(flake['rect']):
                     flake['x'] = random.randint(0,WINWIDTH-1)
                     flake['y'] = random.randint(-WINHEIGHT//2,0)
                     bullets.remove (bullet)
-                    for n in range (10):
+                    for n in range (1):
                      flakes.append( newflake() )
                      flakes.append( newflake() )
                     
@@ -198,7 +198,8 @@ def newflake():
                  'x': random.randint(0,WINWIDTH-1),
                  'y': random.randint(-WINHEIGHT,0),
                  'color' : (color,color,color),
-                 }
+                 'size': random.randint(20,40),                  
+                         }
     return flake
                  
 if __name__ == '__main__':
